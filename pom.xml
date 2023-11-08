@@ -47,12 +47,7 @@
             <version>3.1.4</version>
         </dependency>
 
-			<!-- Thêm dependency cho PostgreSQL -->
-			<dependency>
-				<groupId>org.postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-			</dependency>
-			<!-- Các dependency khác của Spring Boot -->
+
 
 		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
 		<dependency>
@@ -60,6 +55,19 @@
 			<artifactId>spring-jdbc</artifactId>
 			<version>6.0.13</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.2.20</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+
 
 	</dependencies>
 

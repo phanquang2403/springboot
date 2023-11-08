@@ -4,23 +4,29 @@ import learn.youtobe.demo.base.BaseDAO;
 import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.dtos.UserDTO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class UserDAO extends BaseDAO {
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     public UserResponse getListAccount(UserRequest request){
         UserResponse userResponse  = new UserResponse();
         try {
             String moreQuery = "";
             if(request.getName() != null && !request.getName().equals("")){
-                String temp1 = "AND LOWER( fds.NAME) LIKE '%" + request.getName().toLowerCase() +"%'";
+                String temp1 = "where  username = '" + request.getName().toLowerCase() + "'";
                 moreQuery += temp1;
             }
 
-            String sql ="SELECT fds.name AS name,fds.email AS email FROM ERP_AC.FICO_DOCSTATUS fds where fds.ISACTIVE != 'D' "+ moreQuery;
+            String sql ="select  a.username as name, a.email  as email from account a "+ moreQuery;
+            System.out.println("sql" +sql);
             List<UserDTO> list = jdbcTemplate.query(
                     sql,
                     (rs, rowNum) -> UserDTO.builder()
@@ -29,6 +35,7 @@ public class UserDAO extends BaseDAO {
                             .build());
             userResponse.setList(list);
             userResponse.setTotalRecords(countAllDocStatus(request));
+            System.out.println("userResponse = " + userResponse);
             return  userResponse;
 
         } catch (Exception e) {
@@ -40,13 +47,13 @@ public class UserDAO extends BaseDAO {
     public Integer countAllDocStatus(UserRequest request) {
         String moreQuery = "";
         if(request.getName() != null && !request.getName().equals("")){
-            String temp1 = "AND LOWER( fds.NAME) LIKE '%" + request.getName().toLowerCase() +"%'";
+            String temp1 = "where  username = '" + request.getName().toLowerCase() + "'";
             moreQuery += temp1;
         }
 
-        String sql ="SELECT count(fds.DOCS_ID) docsId FROM ERP_AC.FICO_DOCSTATUS fds where fds.ISACTIVE != 'D' "+ moreQuery;
+        String sql ="select   count(a.username) as username from account a "+ moreQuery;
 
-        List<Integer> result = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("docsId"));
+        List<Integer> result = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("username"));
         return result.isEmpty() ? null : result.get(0).intValue();
 
     }
