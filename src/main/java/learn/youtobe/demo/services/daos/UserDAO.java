@@ -5,10 +5,11 @@ import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -17,25 +18,46 @@ public class UserDAO extends BaseDAO {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     public UserResponse getListAccount(UserRequest request){
-        UserResponse userResponse  = new UserResponse();
+
         try {
-            String moreQuery = "";
-            if(request.getName() != null && !request.getName().equals("")){
-                String temp1 = "where  username = '" + request.getName().toLowerCase() + "'";
-                moreQuery += temp1;
+            UserResponse userResponse  = new UserResponse();
+            MapSqlParameterSource map = new MapSqlParameterSource();
+
+            if(request.getPage() != null) {
+                map.addValue("start", (request.getPage() - 1) * request.getPageSize() + 1);
+            }else{
+                map.addValue("start",1);
             }
 
-            String sql ="select  a.username as name, a.email  as email from account a "+ moreQuery;
-            System.out.println("sql" +sql);
+            if(request.getPageSize() != null && request.getPage() != null){
+                map.addValue("end",request.getPageSize()* request.getPage());
+            }else{
+                map.addValue("end",10);
+
+            }
+
+            String moreQuery = "";
+            if(request.getName() != null && !request.getName().isEmpty()){
+                String temp1 = "and  username = '" + request.getName().toLowerCase() + "'";
+                moreQuery+=temp1;
+            }
+
+            String sql ="select   subquery.email as email ,subquery.username as name" +
+                    " FROM (" +
+                    " SELECT a.email,a.username, ROW_NUMBER() OVER (ORDER BY a.username asc) as seqnum FROM account a where  1=1 " + moreQuery +
+                    " ) AS subquery" +
+                    " where seqnum BETWEEN :start AND :end";
+
             List<UserDTO> list = jdbcTemplate.query(
-                    sql,
+                    sql.toLowerCase(),map,
                     (rs, rowNum) -> UserDTO.builder()
                             .name(rs.getString("name"))
                             .email(rs.getString("email"))
                             .build());
+
+
             userResponse.setList(list);
             userResponse.setTotalRecords(countAllDocStatus(request));
-            System.out.println("userResponse = " + userResponse);
             return  userResponse;
 
         } catch (Exception e) {
@@ -46,14 +68,14 @@ public class UserDAO extends BaseDAO {
 
     public Integer countAllDocStatus(UserRequest request) {
         String moreQuery = "";
-        if(request.getName() != null && !request.getName().equals("")){
+        if(request.getName() != null && !request.getName().isEmpty()){
             String temp1 = "where  username = '" + request.getName().toLowerCase() + "'";
             moreQuery += temp1;
         }
 
         String sql ="select   count(a.username) as username from account a "+ moreQuery;
 
-        List<Integer> result = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getInt("username"));
+        List<Integer> result = jdbcTemplate.query(sql.toLowerCase(), (rs, rowNum) -> rs.getInt("username"));
         return result.isEmpty() ? null : result.get(0).intValue();
 
     }

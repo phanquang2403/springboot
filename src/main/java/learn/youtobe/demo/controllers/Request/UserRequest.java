@@ -9,5 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequest  {
-    private  String name;
+    private String name;
+    private Integer page;
+    private Integer pageSize;
 }
