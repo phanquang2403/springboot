@@ -1,11 +1,15 @@
 package learn.youtobe.demo.controllers;
 
 import learn.youtobe.demo.base.BaseController;
+import learn.youtobe.demo.base.BaseResponse;
+import learn.youtobe.demo.base.CustomerException;
+import learn.youtobe.demo.controllers.Request.InsertUserRequest;
 import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +36,19 @@ public class UserControllers extends BaseController {
         return null;
     }
 
-    @GetMapping("/test-db-connection")
-    public String testDbConnection() {
-        try {
-            jdbcTemplate.queryForObject("SELECT 1", Integer.class);
-            return "Database connection is successful!";
-        } catch (Exception e) {
-            return "Database connection failed: " + e.getMessage();
+    @PostMapping("create-user")
+    public ResponseEntity<?> createUser(@RequestBody InsertUserRequest request) throws CustomerException {
+        try{
+            BaseResponse result = userService.createAccount(request);
+            return new ResponseEntity<>(result,HttpStatus.CREATED);
+        }catch (CustomerException e){
+            throw new CustomerException(e.getMessage());
+        }catch (Exception e){
+            log.error("createUser_error {0}", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
+
 }
 

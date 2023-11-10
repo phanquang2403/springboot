@@ -6,12 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserRequest implements Serializable {
-    private String name;
-    private Integer page;
-    private Integer pageSize;
+@AllArgsConstructor
+public class InsertUserRequest implements Serializable {
+    private String username;
+    private String email;
+    private  String pass;
 }
