@@ -1,7 +1,6 @@
 package learn.youtobe.demo.services.daos;
 
 import learn.youtobe.demo.base.BaseDAO;
-import learn.youtobe.demo.base.BaseResponse;
 import learn.youtobe.demo.controllers.Request.InsertUserRequest;
 import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

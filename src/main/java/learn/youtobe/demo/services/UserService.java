@@ -1,5 +1,6 @@
 package learn.youtobe.demo.services;
 
+import org.springframework.core.io.Resource;
 import learn.youtobe.demo.base.BaseResponse;
 import learn.youtobe.demo.base.CustomerException;
 import learn.youtobe.demo.controllers.Request.InsertUserRequest;
@@ -12,4 +13,6 @@ public interface UserService {
     UserResponse getListAllAccount(UserRequest request);
 
     BaseResponse createAccount(InsertUserRequest request) throws CustomerException;
+
+    byte[] exportExcel(Resource resource,UserRequest request);
 }
