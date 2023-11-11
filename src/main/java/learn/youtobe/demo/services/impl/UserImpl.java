@@ -44,19 +44,24 @@ public class UserImpl implements UserService {
             throw new CustomerException("Username is required");
         }
 
-        Boolean isExitsAccount = userDAO.isExitsAccount(request);
-        System.out.println("isExitsAccount" + isExitsAccount);
-        if (!userDAO.isExitsAccount(request)) {
-            throw new CustomerException("username is exits");
+        if (request.getPass() == null) {
+            throw new CustomerException("Pass is required");
         }
 
-        return new BaseResponse(false, "OK", userDAO.createAccount(request));
+
+        Boolean isExitsAccount = userDAO.isExitsAccount(request);
+        System.out.println("____________________isExitsAccount = " + isExitsAccount);
+
+        if (isExitsAccount) {
+            throw new CustomerException("username or email is exits");
+        }
+
+        return new BaseResponse(false, "Create user success!", userDAO.createAccount(request));
 
     }
 
 
-
-    public  byte[] exportExcel(Resource resource,UserRequest request){
+    public byte[] exportExcel(Resource resource, UserRequest request) {
         UserResponse response = userDAO.getListAccount(request);
         return writeDataToExcelSalary(resource, response.getList());
     }

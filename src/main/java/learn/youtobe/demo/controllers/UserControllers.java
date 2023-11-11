@@ -40,12 +40,12 @@ public class UserControllers extends BaseController {
             return successApi(result, "OK");
         } catch (Exception e) {
             log.error(e.getMessage());
+            return errorApi(e.getLocalizedMessage());
         }
-        return null;
     }
 
     @PostMapping("create-user")
-    public ResponseEntity<?> createUser(@RequestBody InsertUserRequest request) throws CustomerException {
+    public ResponseEntity<?> createUser(@RequestBody(required = false) InsertUserRequest request) throws CustomerException {
         try{
             BaseResponse result = userService.createAccount(request);
             return new ResponseEntity<>(result,HttpStatus.CREATED);

@@ -6,6 +6,7 @@ import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -75,7 +76,7 @@ public class UserDAO extends BaseDAO {
 
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("username", request.getUsername());
-        map.addValue("email", request.getUsername());
+        map.addValue("email", request.getEmail());
         map.addValue("pass", request.getPass());
 
         String sql =
@@ -90,9 +91,18 @@ public class UserDAO extends BaseDAO {
 
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("username", request.getUsername());
-        String sql = "select a.username  from account a where a.username = ':username'";
-        List<Integer> countAccount = jdbcTemplate.queryForList(sql, map, Integer.class);
-        return countAccount.isEmpty();
+        map.addValue("email", request.getEmail());
+        String sql =
+                "SELECT count(*) FROM account a WHERE a.username  = :username OR a.email = :email";
+
+        try {
+            List<Integer> result = jdbcTemplate.queryForList(sql, map, Integer.class);
+//            System.out.println("_____________RESULT__________  " + result);
+            return result.get(0) > 0;
+        } catch (Exception e) {
+            return false;
+        }
+
 
     }
 
