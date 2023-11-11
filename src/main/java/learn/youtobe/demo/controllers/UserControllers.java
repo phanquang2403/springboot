@@ -1,7 +1,5 @@
 package learn.youtobe.demo.controllers;
-
 import learn.youtobe.demo.base.BaseController;
-import learn.youtobe.demo.base.BaseResponse;
 import learn.youtobe.demo.base.CustomerException;
 import learn.youtobe.demo.controllers.Request.InsertUserRequest;
 import learn.youtobe.demo.controllers.Request.UserRequest;
@@ -17,11 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.File;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,8 +48,11 @@ public class UserControllers extends BaseController {
     @PostMapping("create-user")
     public ResponseEntity<?> createUser(@RequestBody(required = false) InsertUserRequest request) throws CustomerException {
         try {
-            BaseResponse result = userService.createAccount(request);
-            return new ResponseEntity<>(result, HttpStatus.CREATED);
+            Boolean result = userService.createAccount(request);
+            if (result) {
+                return successApi(null, "Tạo thành công");
+            }
+            return errorApi("Tạo không thành công");
         } catch (CustomerException e) {
             throw new CustomerException(e.getMessage());
         } catch (Exception e) {
@@ -87,7 +85,7 @@ public class UserControllers extends BaseController {
             List<UserDTO> list = userService.importExcel(file);
             return successApi(list, "ok");
         } catch (Exception e) {
-            log.error("importUser_error "+  e.getMessage());
+            log.error("importUser_error " + e.getMessage());
             return errorApi(e.getLocalizedMessage());
         }
     }

@@ -6,7 +6,6 @@ import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -68,7 +67,7 @@ public class UserDAO extends BaseDAO {
         return null;
     }
 
-    public UserResponse createAccount(InsertUserRequest request) {
+    public Boolean createAccount(InsertUserRequest request) {
         /*
          * @name seq
          * CREATE SEQUENCE ACCOUNT_SEQ INCREMENT 1 START 1;
@@ -82,9 +81,8 @@ public class UserDAO extends BaseDAO {
         String sql =
                 "INSERT INTO account  (id, username, email, password, created_at) VALUES (nextval('ACCOUNT_SEQ'), :username, :email,:pass, now());";
 
-        jdbcTemplate.update(sql, map);
-
-        return null;
+        int result = jdbcTemplate.update(sql, map);
+        return result != 0;
     }
 
     public Boolean isExitsAccount(InsertUserRequest request) {

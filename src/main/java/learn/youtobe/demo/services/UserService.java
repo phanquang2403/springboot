@@ -16,7 +16,7 @@ import java.util.List;
 public interface UserService {
     UserResponse getListAllAccount(UserRequest request);
 
-    BaseResponse createAccount(InsertUserRequest request) throws CustomerException;
+    Boolean createAccount(InsertUserRequest request) throws CustomerException;
 
     byte[] exportExcel(Resource resource,UserRequest request);
 

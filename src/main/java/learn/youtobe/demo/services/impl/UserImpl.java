@@ -36,7 +36,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public BaseResponse createAccount(InsertUserRequest request) throws CustomerException {
+    public Boolean createAccount(InsertUserRequest request) throws CustomerException {
         if (request == null) {
             throw new CustomerException(Message.REQUEST_INVALID);
         }
@@ -60,7 +60,8 @@ public class UserImpl implements UserService {
             throw new CustomerException("username or email is exits");
         }
 
-        return new BaseResponse(false, "Create user success!", userDAO.createAccount(request));
+        return userDAO.createAccount(request);
+
 
     }
 
