@@ -7,6 +7,7 @@ import learn.youtobe.demo.controllers.Request.InsertUserRequest;
 import learn.youtobe.demo.controllers.Request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.UserService;
+import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 @Log4j2
 @CrossOrigin("*")
@@ -46,12 +52,12 @@ public class UserControllers extends BaseController {
 
     @PostMapping("create-user")
     public ResponseEntity<?> createUser(@RequestBody(required = false) InsertUserRequest request) throws CustomerException {
-        try{
+        try {
             BaseResponse result = userService.createAccount(request);
-            return new ResponseEntity<>(result,HttpStatus.CREATED);
-        }catch (CustomerException e){
+            return new ResponseEntity<>(result, HttpStatus.CREATED);
+        } catch (CustomerException e) {
             throw new CustomerException(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("createUser_error {0}", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -60,20 +66,30 @@ public class UserControllers extends BaseController {
 
     @PostMapping("export-excel-user")
     public ResponseEntity<?> exportExcelUser(@RequestBody UserRequest request) throws CustomerException {
-        try{
+        try {
             Date data = new Date();
-            String fileName = "bao_cao_"+data.getTime() + ".xlsx";
+            String fileName = "bao_cao_" + data.getTime() + ".xlsx";
             Resource resource = resourceExcelUser;
-            byte[] createFileExcel = userService.exportExcel(resource,request);
+            byte[] createFileExcel = userService.exportExcel(resource, request);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName)
                     .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
                     .body(createFileExcel);
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("exportExcelUser_error {0}", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @PostMapping("import")
+    public ResponseEntity<?> importUser(@RequestParam("file") MultipartFile file) {
+        try {
+            List<UserDTO> list = userService.importExcel(file);
+            return successApi(list, "ok");
+        } catch (Exception e) {
+            log.error("importUser_error "+  e.getMessage());
+            return errorApi(e.getLocalizedMessage());
+        }
+    }
 }
 

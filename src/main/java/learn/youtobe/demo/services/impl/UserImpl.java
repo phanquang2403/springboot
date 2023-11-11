@@ -11,13 +11,17 @@ import learn.youtobe.demo.services.daos.UserDAO;
 import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,6 +70,7 @@ public class UserImpl implements UserService {
         return writeDataToExcelSalary(resource, response.getList());
     }
 
+
     private byte[] writeDataToExcelSalary(Resource resource, List<UserDTO> results) {
         try {
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
@@ -101,5 +106,27 @@ public class UserImpl implements UserService {
             log.error("exportExcelUser_error {0}", e);
             return new byte[]{};
         }
+    }
+
+    @Override
+    public List<UserDTO> importExcel(MultipartFile file) {
+
+        try {
+            List<UserDTO> list = new ArrayList<UserDTO>();
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            for (int i = 7; i < worksheet.getPhysicalNumberOfRows(); i++) {
+                UserDTO userDTO = new UserDTO();
+                XSSFRow row = worksheet.getRow(i);
+                userDTO.setEmail(row.getCell(2).getStringCellValue());
+                userDTO.setName(row.getCell(3).getStringCellValue());
+                list.add(userDTO);
+            }
+            return list;
+
+        } catch (Exception e) {
+            log.error("importExcel_ERROR " + e.getMessage());
+        }
+        return null;
     }
 }
