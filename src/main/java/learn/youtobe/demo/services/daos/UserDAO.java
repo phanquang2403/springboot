@@ -1,8 +1,8 @@
 package learn.youtobe.demo.services.daos;
 
 import learn.youtobe.demo.base.BaseDAO;
-import learn.youtobe.demo.controllers.Request.InsertUserRequest;
-import learn.youtobe.demo.controllers.Request.UserRequest;
+import learn.youtobe.demo.controllers.request.InsertUserRequest;
+import learn.youtobe.demo.controllers.request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.dtos.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserDAO extends BaseDAO {
             MapSqlParameterSource map = new MapSqlParameterSource();
 
             if (request.getPage() != null) {
-                map.addValue("start", (request.getPage() - 1) * request.getPageSize() + 1);
+                map.addValue("start",  request.getPage());
             } else {
                 map.addValue("start", 1);
             }

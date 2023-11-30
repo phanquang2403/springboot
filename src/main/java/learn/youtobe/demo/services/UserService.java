@@ -2,10 +2,9 @@ package learn.youtobe.demo.services;
 
 import learn.youtobe.demo.services.dtos.UserDTO;
 import org.springframework.core.io.Resource;
-import learn.youtobe.demo.base.BaseResponse;
 import learn.youtobe.demo.base.CustomerException;
-import learn.youtobe.demo.controllers.Request.InsertUserRequest;
-import learn.youtobe.demo.controllers.Request.UserRequest;
+import learn.youtobe.demo.controllers.request.InsertUserRequest;
+import learn.youtobe.demo.controllers.request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

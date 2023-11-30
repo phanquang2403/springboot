@@ -1,4 +1,4 @@
-package learn.youtobe.demo.controllers.Request;
+package learn.youtobe.demo.controllers.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

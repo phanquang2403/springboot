@@ -1,10 +1,9 @@
 package learn.youtobe.demo.services.impl;
 
-import learn.youtobe.demo.base.BaseResponse;
 import learn.youtobe.demo.base.CustomerException;
 import learn.youtobe.demo.base.Message;
-import learn.youtobe.demo.controllers.Request.InsertUserRequest;
-import learn.youtobe.demo.controllers.Request.UserRequest;
+import learn.youtobe.demo.controllers.request.InsertUserRequest;
+import learn.youtobe.demo.controllers.request.UserRequest;
 import learn.youtobe.demo.controllers.response.UserResponse;
 import learn.youtobe.demo.services.UserService;
 import learn.youtobe.demo.services.daos.UserDAO;

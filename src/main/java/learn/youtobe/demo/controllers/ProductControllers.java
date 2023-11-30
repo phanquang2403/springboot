@@ -2,7 +2,7 @@ package learn.youtobe.demo.controllers;
 
 import learn.youtobe.demo.Entities.ProductEntity;
 import learn.youtobe.demo.base.BaseController;
-import learn.youtobe.demo.controllers.Request.ProductRequest;
+import learn.youtobe.demo.controllers.request.ProductRequest;
 import learn.youtobe.demo.repositories.ProductRepository;
 import learn.youtobe.demo.services.ProductService;
 import lombok.RequiredArgsConstructor;
