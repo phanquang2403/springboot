@@ -5,7 +5,7 @@ import learn.youtobe.demo.base.BaseController;
 import learn.youtobe.demo.controllers.request.ModuleActionRequest;
 import learn.youtobe.demo.controllers.request.ModuleRoleRequest;
 import learn.youtobe.demo.controllers.request.PermissionRequest;
-import learn.youtobe.demo.controllers.request.RoleRequest;
+import learn.youtobe.demo.controllers.request.RoleByUserRequest;
 import learn.youtobe.demo.controllers.response.RoleResponse;
 import learn.youtobe.demo.services.PermissionService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class PermissionControllers extends BaseController {
             }
             return errorApi("Tạo không thành công");
         } catch (Exception e) {
-            log.info("createModule_error {0}", e.getMessage());
+            log.info("createModule_error: " + e.getMessage());
             return errorApi(e.getLocalizedMessage());
         }
     }
@@ -47,7 +47,7 @@ public class PermissionControllers extends BaseController {
             }
             return errorApi("Tạo không thành công");
         } catch (Exception e) {
-            log.error("createModuleRole_error {0}", e.getLocalizedMessage());
+            log.error("createModuleRole_error " + e.getLocalizedMessage());
             return errorApi(e.getLocalizedMessage());
         }
     }
@@ -61,20 +61,19 @@ public class PermissionControllers extends BaseController {
             }
             return errorApi("Tạo không thành công");
         } catch (Exception e) {
-            log.error("createModuleAction_error {0}", e.getLocalizedMessage());
+            log.error("createModuleAction_error: " + e.getLocalizedMessage());
             return errorApi(e.getLocalizedMessage());
         }
     }
 
     @PostMapping("/module")
-    public ResponseEntity<?> getPermission(@RequestBody RoleRequest request) {
+    public ResponseEntity<?> getPermission(@RequestBody RoleByUserRequest request) {
         try {
             List<RoleResponse> result = permissionService.getPermission(request);
             return successApi(result, "ok");
         } catch (Exception e) {
-            log.info("getPermission_error {0}", e.getLocalizedMessage());
-            errorApi(e.getLocalizedMessage());
+            log.info("getPermission_error " + e.getLocalizedMessage());
+            return errorApi(e.getLocalizedMessage());
         }
-        return null;
     }
 }

@@ -5,30 +5,20 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
-
 @Entity
-public class Role {
-
+public class RoleUser {
     @Id
     @NotBlank
+    @Column(name = "ROLE_USER_ID")
+    private Integer ROLE_USER_ID;
+
+    @NotBlank
     @Column(name = "ROLE_ID")
-    private Integer ROLE_ID;
+    private String ROLE_ID;
 
     @NotBlank
-    @Column(name = "ROLE_CODE")
-    private String ROLE_CODE;
-
-    @NotBlank
-    @Column(name = "ROLE_NAME")
-    private String ROLE_NAME;
-
-    @NotBlank
-    @Column(name = "DESCRIPTION")
-    private String DESCRIPTION;
-
-    @NotBlank
-    @Column(name = "STATUS")
-    private Integer STATUS;
+    @Column(name = "USER_ID")
+    private Integer USER_ID;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED")

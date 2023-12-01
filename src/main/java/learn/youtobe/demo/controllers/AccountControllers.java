@@ -24,7 +24,7 @@ public class AccountControllers extends BaseController {
             AccountResponse result = accountService.getAllAccount(request);
             return successApi(result, "ok");
         } catch (Exception e) {
-            log.error("getAllAccount_error {0}", e.getLocalizedMessage());
+            log.error("getAllAccount_error: " + e.getLocalizedMessage());
             return errorApi(e.getMessage());
         }
     }

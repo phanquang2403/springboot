@@ -1,10 +1,11 @@
 package learn.youtobe.demo.services.impl;
 
 import jakarta.transaction.Transactional;
+import learn.youtobe.demo.base.CustomerException;
 import learn.youtobe.demo.controllers.request.ModuleActionRequest;
 import learn.youtobe.demo.controllers.request.ModuleRoleRequest;
 import learn.youtobe.demo.controllers.request.PermissionRequest;
-import learn.youtobe.demo.controllers.request.RoleRequest;
+import learn.youtobe.demo.controllers.request.RoleByUserRequest;
 import learn.youtobe.demo.controllers.response.RoleResponse;
 import learn.youtobe.demo.services.PermissionService;
 import learn.youtobe.demo.services.daos.PermissionDAO;
@@ -62,16 +63,16 @@ public class PermissionImpl implements PermissionService {
     }
 
     @Override
-    public List<RoleResponse> getPermission(RoleRequest request) throws Exception {
+    public List<RoleResponse> getPermission(RoleByUserRequest request) throws Exception {
         if (request.getAppId() == null && request.getUsername() == null) {
-            throw new Exception("appId và username không bỏ trống!");
+            throw new CustomerException("appId và username không bỏ trống!");
         }
         if (request.getUsername() == null) {
-            throw new Exception("username không bỏ trống!");
+            throw new CustomerException("username không bỏ trống!");
         }
 
         if (request.getAppId() == null) {
-            throw new Exception("appId không bỏ trống!");
+            throw new CustomerException("appId không bỏ trống!");
         }
 
         List<RoleResponse> result = permissionDAO.getPermission(request.getAppId());
